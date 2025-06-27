@@ -59,7 +59,7 @@ public class ShoppingCartController {
     @PostMapping("/products/{productId}")
     public ShoppingCart addProductToCart(@PathVariable int productId, Principal principal) {
         try {
-            //get the current user
+
             String username = principal.getName();
             User user = userDao.getByUserName(username);
             int userId = user.getId();
@@ -71,7 +71,7 @@ public class ShoppingCartController {
 
             }
 
-            //get the existing cart if user doesnt have create a new one
+            //get the existing cart if user doesnt have, create a new one
             ShoppingCart cart = shoppingCartDao.getByUserId(userId);
             if (cart == null) {
                 cart = new ShoppingCart();
@@ -96,6 +96,8 @@ public class ShoppingCartController {
             User user = userDao.getByUserName(userName);
             int userId = user.getId();
 
+
+            //make sure cart and product exist so we can update
             ShoppingCart cart = shoppingCartDao.getByUserId(userId);
             if (cart == null) {
                 throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Cart not found");
@@ -126,6 +128,7 @@ public class ShoppingCartController {
 
             //use clearCart method
             shoppingCartDao.clearCart(userId);
+
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Oops... our bad.");
         }
